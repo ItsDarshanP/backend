@@ -4,3 +4,7 @@ learning backend from scratch to advanced with project
 
 
 npm install -D nodemon
+npm install -D prettier
+ .prettierrc
+ .prettierignore
+
