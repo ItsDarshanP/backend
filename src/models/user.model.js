@@ -52,10 +52,10 @@ const userSchema = new Schema(
 )
 
 // data database mai store hone se pehle hash karne ka middleware 
-userSchema.pre("save", async function(next){ //middlewre so next pass kiya hai
+userSchema.pre("save", async function(next){ //middlewre, so next pass kiya hai
     if(!this.isModified("password")) return next()
 
-    this.password = bcrypt.hash(this.password,10)
+    this.password = await bcrypt.hash(this.password,10)
     next()
 })
 
@@ -69,7 +69,7 @@ userSchema.methods.isPasswordCorrect = async function(password){
 
 // create a access token
 userSchema.methods.generateAccessToken = function (){
-    jwt.sign(
+   return jwt.sign(
         // payload
         {
             _id : this._id,
@@ -78,26 +78,24 @@ userSchema.methods.generateAccessToken = function (){
             fullname : this.fullName
         },
         // secretOrPrivateKey
-        process.env.ACCESS_TOKEN_SECRET,
+        process.env.ACCESS_TOKEN_SECRET, //240
         {
             expiresIn : process.env.ACCESS_TOKEN_EXPIRY 
-
         }
     )
 }
 
 // create a refresh token
 userSchema.methods.generateRefreshToken = function (){
-    jwt.sign(
+    return jwt.sign(
         // payload
         {
             _id : this._id,
         },
         // secretOrPrivateKey
-        process.env.REFRESH_TOKEN_SECRET,
+        process.env.REFRESH_TOKEN_SECRET, //420
         {
             expiresIn : process.env.REFRESH_TOKEN_EXPIRY 
-
         }
     )
 }
